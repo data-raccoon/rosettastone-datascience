@@ -1,15 +1,16 @@
 ---
 title: "Rosetta stone for data science"
+output: html_document
 ---
 
 ## Preparation
 
-```{r}
-library(dplyr)
+```{r, eval = FALSE}
 library(data.table)
+library(dplyr)
 ```
 
-```{r}
+```{r, eval = FALSE}
 num_value <- 10
 num_ctgry <- 2
 ctgry <- rep_len(letters[1:num_ctgry], num_value)
@@ -19,7 +20,7 @@ datat <- data.table(ctgry, value)
 data
 ```
 
-```{r, engine = 'python'}
+```{r, engine = 'python', eval = FALSE}
 import string
 import numpy as np
 import pandas as pd
@@ -27,7 +28,7 @@ from pandas_ply import install_ply, X, sym_call
 install_ply(pd)
 ```
 
-```{r, engine = 'python'}
+```{r, engine = 'python', eval = FALSE}
 num_value = 10
 num_ctgry = 2
 ctgry = (list(string.ascii_lowercase[:num_ctgry]) * (np.ceil(num_value / float(num_ctgry))))[:num_value]
@@ -36,32 +37,31 @@ data = pd.DataFrame({"ctgry": ctgry, "value": value})
 ```
 
 
-## Solutions
-
+## Snippets
 
 ### filter
 
 **R dplyr**
-```{r}
+```{r, eval = FALSE}
 out <- data %>%
   filter(ctgry == "a")
 out
 ```
 
 **R data.table**
-```{r}
+```{r, eval = FALSE}
 out <- datat[ctgry == "a"]
 out
 ```
 
 **python pandas**
-```{r, engine = 'python'}
+```{r, engine = 'python', eval = FALSE}
 out = data[data.ctgry == "a"]
 out
 ```
 
 **python pandas ply**
-```{r, engine = 'python'}
+```{r, engine = 'python', eval = FALSE}
 out = (data
     .ply_where(X.ctgry == "a"))
 out
@@ -71,9 +71,42 @@ out
 ### group_by, summarize
 
 **R dplyr**
+```{r, eval = FALSE}
+out <- data %>%
+  group_by(ctgry) %>%
+  summarize(value = mean(value))
+out
+```
 
 **R data.table**
+```{r, eval = FALSE}
+out <- datat[, .(value = mean(value)), by = "ctgry"]
+out
+```
 
 **python pandas**
+```{r, engine = 'python', eval = FALSE}
+grouped = data.groupby(['ctgry'])
+out = pd.DataFrame()
+out['value'] = grouped.value.mean()
+out
+```
 
 **python pandas ply**
+```{r, engine = 'python', eval = FALSE}
+out = (data
+  .groupby(['ctgry'])
+  .ply_select(value = X.value.mean()))
+out
+```
+
+
+## References
+
+Idea:
+
+- http://rosettacode.org
+
+Snippets:
+
+- http://pythonhosted.org/pandas-ply/
