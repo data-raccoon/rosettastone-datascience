@@ -1,0 +1,79 @@
+---
+title: "Rosetta stone for data science"
+---
+
+## Preparation
+
+```{r}
+library(dplyr)
+library(data.table)
+```
+
+```{r}
+num_value <- 10
+num_ctgry <- 2
+ctgry <- rep_len(letters[1:num_ctgry], num_value)
+value <- rnorm(num_value)
+data <- data.frame(ctgry, value)
+datat <- data.table(ctgry, value)
+data
+```
+
+```{r, engine = 'python'}
+import string
+import numpy as np
+import pandas as pd
+from pandas_ply import install_ply, X, sym_call
+install_ply(pd)
+```
+
+```{r, engine = 'python'}
+num_value = 10
+num_ctgry = 2
+ctgry = (list(string.ascii_lowercase[:num_ctgry]) * (np.ceil(num_value / float(num_ctgry))))[:num_value]
+value = np.random.randn(num_value)
+data = pd.DataFrame({"ctgry": ctgry, "value": value})
+```
+
+
+## Solutions
+
+
+### filter
+
+**R dplyr**
+```{r}
+out <- data %>%
+  filter(ctgry == "a")
+out
+```
+
+**R data.table**
+```{r}
+out <- datat[ctgry == "a"]
+out
+```
+
+**python pandas**
+```{r, engine = 'python'}
+out = data[data.ctgry == "a"]
+out
+```
+
+**python pandas ply**
+```{r, engine = 'python'}
+out = (data
+    .ply_where(X.ctgry == "a"))
+out
+```
+
+
+### group_by, summarize
+
+**R dplyr**
+
+**R data.table**
+
+**python pandas**
+
+**python pandas ply**
